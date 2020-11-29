@@ -4,7 +4,7 @@ locals {
   
   # Create alarm name based on the trigger condition (hopefully prevent duplicates)
   # (e.g. PaymentGatewayAverageApproximateNumberOfMessagesVisibleGreaterThanOrEqualToThreshold10000In5Periods)
-  alarm_name = var.alarm_name == null ? "${local.queue_name_snake}${var.statistic}${var.metric_name}${var.comparison}${var.threshold}In${var.evaluation_periods}PeriodsOf${var.period}" : var.alarm_name
+  alarm_name = var.alarm_name == null ? "${local.queue_name_snake}Queue${var.statistic}${var.metric_name}${var.comparison}${var.threshold}In${var.evaluation_periods}PeriodsOf${var.period}" : var.alarm_name
 }
 
 # Retrieve the requested SQS queue
