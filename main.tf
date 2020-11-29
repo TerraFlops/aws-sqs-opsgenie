@@ -26,7 +26,7 @@ data "opsgenie_team" "opsgenie_responding_teams" {
 
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
-  count = var.opsgenie_integration_name != null && (length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0) ? 1 : 0
+  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
   name = "TerraformSqsIntegration${local.alarm_name}"
   type = "AmazonSns"
   # Attach responders to the integration
@@ -53,7 +53,7 @@ resource "aws_sns_topic" "alarm" {
 
 # Create HTTPS subscription from OpsGenie to the SNS topic
 resource "aws_sns_topic_subscription" "message_age_alarm" {
-  count = var.opsgenie_integration_name != null && (length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0) ? 1 : 0
+  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
   endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration[count.index].api_key}"
   endpoint_auto_confirms = true
   protocol = "https"
