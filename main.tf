@@ -106,21 +106,6 @@ resource "opsgenie_integration_action" "alarm" {
       var.metric_name
     ]
     priority = var.opsgenie_priority
-    # Attach responders to the integration
-    dynamic "responders" {
-      for_each = var.opsgenie_responding_users
-      content {
-        type = "user"
-        id = data.opsgenie_user.opsgenie_responding_users[responders.key].id
-      }
-    }
-    dynamic "responders" {
-      for_each = local.opsgenie_responding_teams
-      content {
-        type = "team"
-        id = data.opsgenie_team.opsgenie_responding_teams[responders.key].id
-      }
-    }
     filter {
       type = "match-all-conditions"
       conditions {
