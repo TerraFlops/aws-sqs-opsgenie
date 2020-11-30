@@ -28,10 +28,15 @@ data "opsgenie_team" "opsgenie_responding_teams" {
 data "opsgenie_team" "opsgenie_owner_team" {
   name = var.opsgenie_owner_team
 }
+
+# Get AWS account ID
+data "aws_caller_identity" "default" {
+}
+
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
   count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
-  name = "TerraformSqsIntegration${local.alarm_name}"
+  name = "Terraform${data.aws_caller_identity.default.account_id}SqsIntegration${local.alarm_name}"
   type = "AmazonSns"
   owner_team_id = data.opsgenie_team.opsgenie_owner_team.id
   # Attach responders to the integration
