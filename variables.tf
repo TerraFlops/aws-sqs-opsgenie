@@ -45,11 +45,6 @@ variable "threshold" {
   description = "Threshold for alarm"
 }
 
-variable "opsgenie_priority" {
-  type = string
-  description = "Opsgenie alarm priority"
-}
-
 variable "opsgenie_tags" {
   type = set(string)
   description = "Optional set of tags to add to the OpsGenie alert"
