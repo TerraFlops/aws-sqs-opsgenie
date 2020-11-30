@@ -51,6 +51,23 @@ variable "opsgenie_tags" {
   default = []
 }
 
+variable "opsgenie_entity" {
+  type = string
+  description = "Entity to associate with alarm (defaults to AmazonSns)"
+  default = "AmazonSns"
+}
+
+variable "opsgenie_user" {
+  type = string
+  description = "User to associate with alarm (defaults to AmazonSns)"
+  default = "AmazonSns"
+}
+
+variable "opsgenie_priority" {
+  type = string
+  description = "Opsgenie priority level for alarm"
+}
+
 variable "opsgenie_owner_team" {
   type = string
   description = "Team that owns the alarm in Opsgenie"

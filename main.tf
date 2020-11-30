@@ -85,3 +85,29 @@ resource "aws_cloudwatch_metric_alarm" "alarm" {
     aws_sns_topic.alarm.arn
   ]
 }
+
+# Create OpsGenie integration action on SNS topic creation
+resource "opsgenie_integration_action" "alarm" {
+  integration_id = opsgenie_api_integration.opsgenie_integration.id
+  create {
+    alias = local.alarm_name
+    name = "Alarm Triggered"
+    message = "${var.metric_name} ${var.comparison} ${var.threshold}"
+    description = "The ${var.statistic} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
+    entity = var.opsgenie_entity
+    user = var.opsgenie_user
+    tags = [
+      "SQS",
+      var.metric_name
+    ]
+    priority = var.opsgenie_priority
+    filter {
+      type = "match-all-conditions"
+      conditions {
+        field = "reason"
+        operation = "equals"
+        expected_value = "ALERT_OPENED"
+      }
+    }
+  }
+}
