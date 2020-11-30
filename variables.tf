@@ -51,6 +51,11 @@ variable "opsgenie_tags" {
   default = []
 }
 
+variable "opsgenie_owner_team" {
+  type = string
+  description = "Team that owns the alarm in Opsgenie"
+}
+
 variable "opsgenie_integration_name" {
   type = string
   description = "Opsgenie integration name"
