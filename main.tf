@@ -98,7 +98,7 @@ resource "opsgenie_integration_action" "alarm" {
     name = "Alarm Triggered"
     message = "The ${lower(var.statistic)} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
     description = "The ${lower(var.statistic)} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
-    ignore_responders_from_payload = true
+    ignore_responders_from_payload = false
     entity = var.opsgenie_entity
     user = var.opsgenie_user
     tags = [
