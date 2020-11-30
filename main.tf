@@ -1,7 +1,8 @@
 # Convert integration name into snake case
 locals {
   queue_name_snake = join("", [for element in split("-", lower(var.queue_name)) : title(element)])
-  
+  opsgenie_responding_teams = setunion(var.opsgenie_responding_teams, toset([var.opsgenie_owner_team]))
+
   # Create alarm name based on the trigger condition (hopefully prevent duplicates)
   # (e.g. PaymentGatewayAverageApproximateNumberOfMessagesVisibleGreaterThanOrEqualToThreshold10000In5Periods)
   alarm_name = var.alarm_name == null ? "${local.queue_name_snake}Queue${var.statistic}${var.metric_name}${var.comparison}${var.threshold}In${var.evaluation_periods}PeriodsOf${var.period}" : var.alarm_name
@@ -20,7 +21,7 @@ data "opsgenie_user" "opsgenie_responding_users" {
 
 # Retrieve Opsgenie users
 data "opsgenie_team" "opsgenie_responding_teams" {
-  for_each = var.opsgenie_responding_teams
+  for_each = local.opsgenie_responding_teams
   name = each.value
 }
 
@@ -47,7 +48,7 @@ resource "opsgenie_api_integration" "opsgenie_integration" {
     }
   }
   dynamic "responders" {
-    for_each = var.opsgenie_responding_teams
+    for_each = local.opsgenie_responding_teams
     content {
       type = "team"
       id = data.opsgenie_team.opsgenie_responding_teams[responders.key].id
@@ -105,6 +106,21 @@ resource "opsgenie_integration_action" "alarm" {
       var.metric_name
     ]
     priority = var.opsgenie_priority
+    # Attach responders to the integration
+    dynamic "responders" {
+      for_each = var.opsgenie_responding_users
+      content {
+        type = "user"
+        id = data.opsgenie_user.opsgenie_responding_users[responders.key].id
+      }
+    }
+    dynamic "responders" {
+      for_each = local.opsgenie_responding_teams
+      content {
+        type = "team"
+        id = data.opsgenie_team.opsgenie_responding_teams[responders.key].id
+      }
+    }
     filter {
       type = "match-all-conditions"
       conditions {
