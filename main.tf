@@ -88,7 +88,8 @@ resource "aws_cloudwatch_metric_alarm" "alarm" {
 
 # Create OpsGenie integration action on SNS topic creation
 resource "opsgenie_integration_action" "alarm" {
-  integration_id = opsgenie_api_integration.opsgenie_integration.id
+  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
+  integration_id = opsgenie_api_integration.opsgenie_integration[count.index].id
   create {
     alias = local.alarm_name
     name = "Alarm Triggered"
