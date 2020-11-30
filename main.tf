@@ -35,7 +35,6 @@ data "aws_caller_identity" "default" {
 
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
-  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
   name = "Terraform${data.aws_caller_identity.default.account_id}SqsIntegration${local.alarm_name}"
   type = "AmazonSns"
   owner_team_id = data.opsgenie_team.opsgenie_owner_team.id
@@ -63,8 +62,7 @@ resource "aws_sns_topic" "alarm" {
 
 # Create HTTPS subscription from OpsGenie to the SNS topic
 resource "aws_sns_topic_subscription" "message_age_alarm" {
-  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
-  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration[count.index].api_key}"
+  endpoint = "https://api.opsgenie.com/v1/json/amazonsns?apiKey=${opsgenie_api_integration.opsgenie_integration.api_key}"
   endpoint_auto_confirms = true
   protocol = "https"
   topic_arn = aws_sns_topic.alarm.arn
@@ -93,8 +91,7 @@ resource "aws_cloudwatch_metric_alarm" "alarm" {
 
 # Create OpsGenie integration action on SNS topic creation
 resource "opsgenie_integration_action" "alarm" {
-  count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
-  integration_id = opsgenie_api_integration.opsgenie_integration[count.index].id
+  integration_id = opsgenie_api_integration.opsgenie_integration.id
   create {
     alias = local.alarm_name
     name = "Alarm Triggered"
