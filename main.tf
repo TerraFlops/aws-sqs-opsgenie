@@ -24,12 +24,16 @@ data "opsgenie_team" "opsgenie_responding_teams" {
   name = each.value
 }
 
+# Retrieve Opsgenie users
+data "opsgenie_team" "opsgenie_owner_team" {
+  name = var.opsgenie_owner_team
+}
 # Create Opsgenie API integration
 resource "opsgenie_api_integration" "opsgenie_integration" {
   count = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? 1 : 0
   name = "TerraformSqsIntegration${local.alarm_name}"
   type = "AmazonSns"
-  owner_team_id = var.opsgenie_owner_team
+  owner_team_id = data.opsgenie_owner_team.id
   # Attach responders to the integration
   dynamic "responders" {
     for_each = var.opsgenie_responding_users
