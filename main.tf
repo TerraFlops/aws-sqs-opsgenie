@@ -93,8 +93,8 @@ resource "opsgenie_integration_action" "alarm" {
   create {
     alias = local.alarm_name
     name = "Alarm Triggered"
-    message = "${var.metric_name} ${var.comparison} ${var.threshold}"
-    description = "The ${var.statistic} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
+    message = "The ${lower(var.statistic)} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
+    description = "The ${lower(var.statistic)} ${var.metric_name} was ${var.comparison} of ${var.threshold} for ${var.evaluation_periods} evaluation periods of ${var.period} seconds"
     entity = var.opsgenie_entity
     user = var.opsgenie_user
     tags = [
