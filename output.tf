@@ -15,13 +15,13 @@ output "sns_topic_name" {
 }
 
 output "opsgenie_api_integration_name" {
-  value = var.opsgenie_integration_name != null && (length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0) ? opsgenie_api_integration.opsgenie_integration[0].name : null
+  value = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? opsgenie_api_integration.opsgenie_integration[0].name : null
 }
 
 output "opsgenie_api_integration_id" {
-  value = var.opsgenie_integration_name != null && (length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0) ? opsgenie_api_integration.opsgenie_integration[0].id : null
+  value = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? opsgenie_api_integration.opsgenie_integration[0].id : null
 }
 
 output "opsgenie_api_key" {
-  value = var.opsgenie_integration_name != null && (length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0) ? opsgenie_api_integration.opsgenie_integration[0].api_key : null
+  value = length(var.opsgenie_responding_users) > 0 || length(var.opsgenie_responding_teams) > 0 ? opsgenie_api_integration.opsgenie_integration[0].api_key : null
 }
