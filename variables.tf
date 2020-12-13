@@ -3,6 +3,12 @@ variable "queue_name" {
   type = string
 }
 
+variable "description" {
+  description = "Optional alarm description override"
+  type = string
+  default = null
+}
+
 variable "alarm_name" {
   description = "Optional alarm name override, if none supplied will be procedurally generated based on conditions specified"
   type = string
