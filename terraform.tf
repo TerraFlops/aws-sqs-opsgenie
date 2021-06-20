@@ -6,5 +6,9 @@ terraform {
       source = "SumoLogic/sumologic"
       version = "~> 2.9.3"
     }
+    opsgenie = {
+      source = "opsgenie/opsgenie"
+      version = "~> 0.6.5"
+    }
   }
 }
